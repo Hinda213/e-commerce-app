@@ -1,9 +1,12 @@
+import { Navigate, useNavigate } from "react-router-dom";
+
 export default function ProductCard({ product, handleAddToCart, handleRemoveFromCart }) {
   const { title, price, image, category } = product;
+  const navigate = useNavigate();
 
  
   return (
-    <div
+    <div onClick={() => navigate(`/product/${product.id}`)}
       className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 rounded-md 
                     p-4 w-full min-w-0 hover:shadow-md dark:hover:shadow-gray-900/50 transition duration-300"
     >

@@ -8,6 +8,7 @@ import { useState } from "react";
 import CartPage from "./pages/CartPage";
 import { useContext } from "react";
 import { ThemeContext } from "./context/ThemeContext";
+import ProductDetails from "./pages/ProductDetails";
 
 function App() {
   const[cartItems, setCartItems] = useState(() => {
@@ -37,6 +38,7 @@ function App() {
           <Routes>
             <Route path="/" element={<Home setCartItems={setCartItems} />} />
             <Route path="/cart" element={<CartPage cartItems={cartItems} setCartItems={setCartItems} />} />
+            <Route path="/product/:id" element={<ProductDetails />} />
           </Routes>
         </BrowserRouter>
       </div>
