@@ -1,64 +1,25 @@
 import ProductCard from "../components/ProductCard";
-import product from "../data/products";
+import products from "../data/products";
+import { useSearchParams } from "react-router-dom";
+import NotFound from "./NotFound";
 
 function Home({ setCartItems }) {
+const [searchParams] = useSearchParams();
+const category = searchParams.get("category");
+const searchQuery = (searchParams.get("search") ?? "").toLowerCase().trim();
 
+let filteredProducts = category
+  ? products.filter((product) => product.category === category)
+  : products;
 
-  // const products = [
-  //   {
-  //     id: 1,
-  //     title: "Laptop",
-  //     price: 800,
-  //     image: "/laptop.png",
-  //       category: "Electronics"
-  //   },
-  //   {
-  //     id: 2,
-  //     title: "Phone",
-  //     price: 500,
-  //     image: "/phone.png",
-  //     category: "Electronics"
-  //   },
-  //   {
-  //     id: 3,
-  //     title: "Headphones",
-  //     price: 150,
-  //     image: "/headphone.png",
-  //     category: "Electronics"
-  //   },
-  //   {
-  //       id: 4,
-  //       title: "Earphones",
-  //       price: 100,
-  //       image: "/earphone.png",
-  //       category: "Electronics"
-  //   },
-  //   {
-  //       id: 5,
-  //       title: "Smartwatch",
-  //       price: 200,
-  //       image: "/smartwatch.png",
-  //       category: "Electronics"
-  //   },
-  //   {
-  //       id: 6,
-  //       title: "tablet",
-  //       price: 250,
-  //       image: "/tablet.png",
-  //       category: "Electronics"
-  //   },
-  //   {
-  //       id: 7,
-  //       title: "tv",
-  //       price: 650,
-  //       image: "/tv.png",
-  //       category: "Electronics"
-  //   },
-   
- 
-
-  // ];
-
+if (searchQuery) {
+  filteredProducts = filteredProducts.filter(
+    (product) =>
+      product.title.toLowerCase().includes(searchQuery) ||
+      product.category.toLowerCase().includes(searchQuery)
+  );
+}
+  
 
   const handleAddToCart = (product) => {
     setCartItems((prevItems) => {
@@ -87,16 +48,26 @@ function Home({ setCartItems }) {
   };
   
 
+  // Search returned no results — show NotFound with same look and code
+  if (searchQuery && filteredProducts.length === 0) {
+    return (
+      <NotFound
+        title="No products found"
+        message={`No products match "${searchParams.get("search")}". Try a different search.`}
+      />
+    );
+  }
+
   return (
     <div>
-      <h1 className="text-4xl font-bold mt-4 mb-5 text-gray-900 dark:text-white">Our Products 🛍️</h1>
+      <h1 className="text-4xl font-bold mt-4 mb-7 text-orange-300 dark:text-white">Our Products 🛍️</h1>
       <div className="grid grid-cols-1 sm:grid-cols-5 gap-6 text-gray-700 dark:text-gray-300">
-        {products.map((product) => (
+        {filteredProducts.map((product) => (
           <ProductCard
             key={product.id}
             product={product}
-            image={product}
-            category={product}
+            image={product.image}
+            category={product.category}
             handleAddToCart={handleAddToCart}
             handleRemoveFromCart={handleRemoveFromCart}
           />
