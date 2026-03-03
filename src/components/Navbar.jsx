@@ -1,12 +1,14 @@
 import { Link, useNavigate, useSearchParams, createSearchParams } from "react-router-dom";
 import { useContext, useState, useEffect } from "react";
 import { ThemeContext } from "../context/ThemeContext";
+import { AuthContext } from "../context/AuthContext";
 
-export default function Navbar({ cartItems, isLoggedIn, setIsLoggedIn }) {
+export default function Navbar({ cartItems }) {
   const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
   const [searchParams] = useSearchParams();
   const [searchQuery, setSearchQuery] = useState(searchParams.get("search") ?? "");
   const navigate = useNavigate();
+  const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext);
 
   useEffect(() => {
     setSearchQuery(searchParams.get("search") ?? "");
@@ -99,7 +101,7 @@ export default function Navbar({ cartItems, isLoggedIn, setIsLoggedIn }) {
               <span aria-hidden>🛒</span>
               <span>Cart</span>
               {totalItems > 0 && (
-                <span className="absolute -top-0.5 -right-0.5 min-w-[1.25rem] h-5 px-1 flex items-center justify-center rounded-full bg-rose-500 text-white text-xs font-semibold">
+                <span className="absolute -top-0.5 -right-0.5 min-w-1.25rem h-5 px-1 flex items-center justify-center rounded-full bg-rose-500 text-white text-xs font-semibold">
                   {totalItems > 99 ? "99+" : totalItems}
                 </span>
               )}

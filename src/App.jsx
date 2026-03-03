@@ -1,16 +1,16 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useContext, useState } from "react";
 import "./App.css";
 import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
 import image from "./assets/image.png"
-import { useState } from "react";
 import CartPage from "./pages/CartPage";
-import { useContext } from "react"  ;
 import { ThemeContext } from "./context/ThemeContext";
 import ProductDetails from "./pages/ProductDetails";
 import NotFound from "./pages/NotFound";
 import Login from "./pages/Login";
+import { AuthContext } from "./context/AuthContext";
+
 
 
 export default function App() {
@@ -19,10 +19,11 @@ export default function App() {
   return saved ? JSON.parse(saved) : [];
   });
   const { theme } = useContext(ThemeContext);
-  const [isLoggedIn, setIsLoggedIn] = useState(() => { return localStorage.getItem("isLoggedIn") === "true"; });
+ 
 
 
   function ProtectedRoute({ children }) {
+    const { isLoggedIn } = useContext(AuthContext);
     return isLoggedIn ? children : <Navigate to="/login" />;
   }
 
@@ -43,7 +44,7 @@ export default function App() {
 
       <div className="relative z-10">
         <BrowserRouter>
-          <Navbar cartItems={cartItems} isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
+          <Navbar cartItems={cartItems} />
           <Routes>
             <Route path="/" element={<Home setCartItems={setCartItems} />} />
             <Route 
@@ -56,7 +57,7 @@ export default function App() {
              />
           
             <Route path="/product/:id" element={<ProductDetails />} />
-            <Route path="/login" element={<Login setIsLoggedIn={setIsLoggedIn} />} />
+            <Route path="/login" element={<Login/>} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
