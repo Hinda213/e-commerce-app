@@ -11,7 +11,7 @@ export default function ProductCard({ product, handleAddToCart, handleRemoveFrom
                     p-4 w-full min-w-0 hover:shadow-md dark:hover:shadow-gray-900/50 transition duration-300"
     >
       {/* Image */}
-      <div className="flex justify-center h-40 mb-3">
+      <div className="flex justify-center h-30 mb-3">
         <img src={image} alt={title} className="object-contain max-h-full" />
       </div>
 

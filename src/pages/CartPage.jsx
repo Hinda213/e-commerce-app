@@ -1,23 +1,8 @@
-function CartPage({ cartItems, setCartItems }) {
+import { useContext } from "react";
+import { CartContext } from "../context/CartContext";
 
-  const handleIncrease = (product) => {
-    setCartItems((prev) =>
-      prev.map((item) =>
-        item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
-      )
-    );
-  }
-  
- const handleDecrease = (product) => {
-    setCartItems((prev) =>
-      prev.map((item) =>
-        item.id === product.id && item.quantity > 1
-          ? { ...item, quantity: item.quantity - 1 }
-          : item
-      )
-      .filter((item) => item.quantity > 0)
-    );
-  };
+function CartPage() {
+  const { cartItems, clearCart, increaseQuantity, decreaseQuantity } = useContext(CartContext);
 
   const totalPrice = cartItems.reduce(
     (total, item) => total + item.price * item.quantity,
@@ -49,7 +34,7 @@ function CartPage({ cartItems, setCartItems }) {
 
               <div className="flex items-center gap-2">
                 <button
-                  onClick={() => handleDecrease(item)}
+                  onClick={() => decreaseQuantity(item)}
                   className="border-2 border-gray-300 dark:border-gray-500 rounded-lg px-3 py-1 hover:border-red-300 dark:hover:border-red-500 transition duration-300"
                 >
                   ➖
@@ -57,22 +42,22 @@ function CartPage({ cartItems, setCartItems }) {
                 <span>{item.quantity}</span>
 
                 <button
-                  onClick={() => handleIncrease(item)}
+                  onClick={() => increaseQuantity(item)}
                   className="border-2 border-gray-300 dark:border-gray-500 rounded-lg px-3 py-1 hover:border-green-300 dark:hover:border-green-500 transition duration-300"
                 >
                   ➕
-                </button>
-                <button
-                  onClick={() => setCartItems([])}
-                  className="bg-red-500 hover:bg-red-600 active:bg-red-700 text-white text-sm py-2 px-3 rounded-md font-medium transition duration-300"
-                >
-                  Clear Cart
                 </button>
               </div>
             </div>
           ))}
 
           <h2 className="text-xl font-bold mt-4">Total: ${totalPrice.toFixed(2)}</h2>
+          <button
+            onClick={() => clearCart()}
+            className="mt-4 bg-red-500 hover:bg-red-600 active:bg-red-700 text-white text-sm py-2 px-3 rounded-md font-medium transition duration-300"
+          >
+            Clear Cart
+          </button>
         </>
       )}
     </div>

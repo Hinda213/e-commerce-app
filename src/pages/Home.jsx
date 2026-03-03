@@ -2,11 +2,15 @@ import ProductCard from "../components/ProductCard";
 import products from "../data/products";
 import { useSearchParams } from "react-router-dom";
 import NotFound from "./NotFound";
+import { CartContext } from "../context/CartContext";
+import { useContext } from "react";
 
-function Home({ setCartItems }) {
+
+function Home() {
 const [searchParams] = useSearchParams();
 const category = searchParams.get("category");
 const searchQuery = (searchParams.get("search") ?? "").toLowerCase().trim();
+const { addToCart, removeFromCart} = useContext(CartContext);
 
 let filteredProducts = category
   ? products.filter((product) => product.category === category)
@@ -19,33 +23,6 @@ if (searchQuery) {
       product.category.toLowerCase().includes(searchQuery)
   );
 }
-  
-
-  const handleAddToCart = (product) => {
-    setCartItems((prevItems) => {
-      const existingItem = prevItems.find((item) => item.id === product.id);
-      if (existingItem) {
-        return prevItems.map((item) =>
-          item.id === product.id ? { ...item, quantity: item.quantity + 1 } : item
-        );
-      } else {
-        return [...prevItems, { ...product, quantity: 1 }];
-      }
-    });
-  }
-
-  const handleRemoveFromCart = (product) => {
-    setCartItems(prevItems => {
-      const existingItem = prevItems.find(item => item.id === product.id);
-      if (existingItem && existingItem.quantity > 1) {
-        return prevItems.map(item =>
-          item.id === product.id ? { ...item, quantity: item.quantity - 1 } : item
-        );
-      } else {
-        return prevItems.filter(item => item.id !== product.id);
-      }
-    });
-  };
   
 
   // Search returned no results — show NotFound with same look and code
@@ -68,8 +45,8 @@ if (searchQuery) {
             product={product}
             image={product.image}
             category={product.category}
-            handleAddToCart={handleAddToCart}
-            handleRemoveFromCart={handleRemoveFromCart}
+            handleAddToCart={() => addToCart(product)}
+            handleRemoveFromCart={() => removeFromCart(product)}
           />
         ))}
       </div>

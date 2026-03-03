@@ -1,9 +1,9 @@
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
-import { useEffect, useContext, useState } from "react";
+import { useEffect, useContext } from "react";
 import "./App.css";
 import Navbar from "./components/Navbar";
 import Home from "./pages/Home";
-import image from "./assets/image.png"
+import image from "./assets/image.png";
 import CartPage from "./pages/CartPage";
 import { ThemeContext } from "./context/ThemeContext";
 import ProductDetails from "./pages/ProductDetails";
@@ -11,16 +11,8 @@ import NotFound from "./pages/NotFound";
 import Login from "./pages/Login";
 import { AuthContext } from "./context/AuthContext";
 
-
-
 export default function App() {
-  const[cartItems, setCartItems] = useState(() => {
-  const saved = localStorage.getItem("cartItems");
-  return saved ? JSON.parse(saved) : [];
-  });
   const { theme } = useContext(ThemeContext);
- 
-
 
   function ProtectedRoute({ children }) {
     const { isLoggedIn } = useContext(AuthContext);
@@ -28,13 +20,9 @@ export default function App() {
   }
 
   useEffect(() => {
-    localStorage.setItem("cartItems", JSON.stringify(cartItems));
-  }, [cartItems]);
-
-  useEffect(() => {
     document.documentElement.classList.toggle("dark", theme);
   }, [theme]);
-  
+
   return (
     <div
       className="min-h-screen bg-cover bg-center relative bg-gray-100 text-gray-900 dark:bg-gray-900 dark:text-gray-100"
@@ -44,20 +32,19 @@ export default function App() {
 
       <div className="relative z-10">
         <BrowserRouter>
-          <Navbar cartItems={cartItems} />
+          <Navbar /> {/* No props needed */}
           <Routes>
-            <Route path="/" element={<Home setCartItems={setCartItems} />} />
-            <Route 
-            path="/cart"
-            element={
-              <ProtectedRoute>
-                <CartPage cartItems={cartItems} setCartItems={setCartItems} />
-              </ProtectedRoute>
-            }
-             />
-          
+            <Route path="/" element={<Home />} /> {/* No props needed */}
+            <Route
+              path="/cart"
+              element={
+                <ProtectedRoute>
+                  <CartPage /> {/* No props needed */}
+                </ProtectedRoute>
+              }
+            />
             <Route path="/product/:id" element={<ProductDetails />} />
-            <Route path="/login" element={<Login/>} />
+            <Route path="/login" element={<Login />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
