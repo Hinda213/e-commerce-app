@@ -1,13 +1,35 @@
 import { useNavigate, useParams } from "react-router-dom";
-import  products  from "../data/products.js";
+import { useState, useEffect } from "react";
+
 
 export default function ProductDetails() {
   const { id } = useParams();
-  console.log("Product ID:", id);
   const navigate = useNavigate();
-  const product = products.find((p) => p.id === Number(id));
+  const [product, setProduct] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  if (!product) {
+  useEffect(() => {
+    async function fetchProducts() {
+      try {
+        const response = await fetch("https://fakestoreapi.com/products/" + id);
+        const data = await response.json();
+        setProduct(data);
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchProducts();
+  }, []);
+
+  if (loading) {
+    return <p className="text-gray-600 dark:text-gray-400">Loading product details...</p>;
+  }
+
+
+  if (!product || product.id === undefined) {
     return (
       <div className="w-150  p-10 mx-auto  bg-amber-50 dark:bg-gray-800 rounded-lg shadow-md dark:shadow-gray-900/50 text-gray-900 dark:text-gray-100">
         <h1 className="text-3xl font-bold mb-4">Product Not Found</h1>
@@ -27,11 +49,11 @@ export default function ProductDetails() {
   return (
     <div className="w-150  p-10 mx-auto  bg-amber-50 dark:bg-gray-800 rounded-lg shadow-md dark:shadow-gray-900/50 text-gray-900 dark:text-gray-100">
       <h1 className="text-3xl font-bold mb-4">Product Details</h1>
-     <h2>{product.title}</h2>
-     <p>{product.price}</p>
-     <img className="w-30" src={product.image} alt={product.title} />
+      <h2>{product.title}</h2>
+      <img className="w-30" src={product.image} alt={product.title} />
+      <p>{product.price}</p>
       <p className="text-gray-600 dark:text-gray-400">
-        Details for product ID: {id}
+        {product.description}
       </p>
       <button
         onClick={() => navigate("/")}

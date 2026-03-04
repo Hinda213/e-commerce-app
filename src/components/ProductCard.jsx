@@ -36,7 +36,9 @@ export default function ProductCard({ product, handleAddToCart, handleRemoveFrom
         className="mt-3 w-full min-h-[44px] bg-yellow-400 hover:bg-yellow-500 
                          active:bg-yellow-600 text-black text-sm py-2 px-3 rounded-md font-medium 
                          transition duration-300 touch-manipulation"
-        onClick={() => handleAddToCart(product)}
+        onClick={(e) => {
+          e.stopPropagation(); 
+          handleAddToCart(product); }}
       >
         Add Cart
       </button>
@@ -44,7 +46,10 @@ export default function ProductCard({ product, handleAddToCart, handleRemoveFrom
         className="mt-2 w-full min-h-[44px] bg-red-400 hover:bg-red-500 
                          active:bg-red-600 text-white text-sm py-2 px-3 rounded-md font-medium 
                          transition duration-300 touch-manipulation"
-        onClick={() => handleRemoveFromCart(product)}
+        onClick={(e) => {
+          e.stopPropagation();
+          handleRemoveFromCart(product);
+        }}
       >
         Remove Cart
       </button>
