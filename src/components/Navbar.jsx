@@ -3,6 +3,7 @@ import { useContext, useState, useEffect } from "react";
 import { ThemeContext } from "../context/ThemeContext";
 import { AuthContext } from "../context/AuthContext";
 import { CartContext } from "../context/CartContext";
+import useCategories from "../hooks/useCategories";
 
 export default function Navbar() {
   const [searchParams] = useSearchParams();
@@ -11,6 +12,8 @@ export default function Navbar() {
   const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext);
   const { cartItems } = useContext(CartContext);
   const totalItems = cartItems.reduce((sum, item) => sum + item.quantity, 0);
+  const { categories } = useCategories();
+  const category = searchParams.get("category");
 
   useEffect(() => {
     setSearchQuery(searchParams.get("search") ?? "");
@@ -25,6 +28,12 @@ export default function Navbar() {
       pathname: "/",
       search: query ? createSearchParams({ search: query }).toString() : "",
     });
+  }
+
+  function getSearchString(overrides = {}) {
+    const params = { ...overrides };
+    if (searchQuery?.trim()) params.search = searchQuery.trim();
+    return Object.keys(params).length ? createSearchParams(params).toString() : "";
   }
 
   const navBase =
@@ -87,6 +96,32 @@ export default function Navbar() {
             <Link to="/" className={navLink}>
               Home
             </Link>
+
+            <div className="flex flex-wrap items-center gap-2">
+              <Link
+                to={{ pathname: "/", search: getSearchString() }}
+                className={`text-sm font-medium rounded-full px-3 py-1 transition-colors ${
+                  !category
+                    ? "bg-white/20 text-white"
+                    : "text-white/90 hover:text-white hover:bg-white/10"
+                }`}
+              >
+                All
+              </Link>
+              {categories.map((cat) => (
+                <Link
+                  key={cat}
+                  to={{ pathname: "/", search: getSearchString({ category: cat }) }}
+                  className={`text-sm font-medium rounded-full px-3 py-1 transition-colors capitalize ${
+                    category === cat
+                      ? "bg-white/20 text-white"
+                      : "text-white/90 hover:text-white hover:bg-white/10"
+                  }`}
+                >
+                  {cat.charAt(0).toUpperCase() + cat.slice(1)}
+                </Link>
+              ))}
+            </div>
 
             <button
               onClick={toggleTheme}
