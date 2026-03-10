@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from "react-router-dom";
 import { useEffect, useContext } from "react";
 import "./App.css";
 import Navbar from "./components/Navbar";
@@ -15,8 +15,9 @@ export default function App() {
   const { theme } = useContext(ThemeContext);
 
   function ProtectedRoute({ children }) {
+    const location = useLocation();
     const { isLoggedIn } = useContext(AuthContext);
-    return isLoggedIn ? children : <Navigate to="/login" />;
+    return isLoggedIn ? children : <Navigate to="/login" state={{ from: location }} replace />;
   }
 
   useEffect(() => {
