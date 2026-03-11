@@ -33,14 +33,14 @@ export default function App() {
 
       <div className="relative z-10">
         <BrowserRouter>
-          <Navbar /> {/* No props needed */}
+          <Navbar />
           <Routes>
-            <Route path="/" element={<Home />} /> {/* No props needed */}
+            <Route path="/" element={<Home />} /> 
             <Route
               path="/cart"
               element={
                 <ProtectedRoute>
-                  <CartPage /> {/* No props needed */}
+                  <CartPage /> 
                 </ProtectedRoute>
               }
             />

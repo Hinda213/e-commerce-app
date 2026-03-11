@@ -9,9 +9,12 @@ import ProductSkeleton from "../components/ProductSkeleton";
 
 function Home() {
 const [searchParams] = useSearchParams();
-const category = searchParams.get("category");
-const searchQuery = (searchParams.get("search") ?? "").toLowerCase().trim();
+const categoryRaw = searchParams.get("category");
+const category = categoryRaw && categoryRaw !== "undefined" ? categoryRaw : null;
+const searchRaw = searchParams.get("search") ?? "";
+const searchQuery = (searchRaw !== "undefined" ? searchRaw : "").toLowerCase().trim();
 const { addToCart, removeFromCart} = useContext(CartContext);
+const sort = searchParams.get("sort");
 
 
 const { products, loading, error } = useProducts();
@@ -44,10 +47,9 @@ if (searchQuery) {
   filteredProducts = filteredProducts.filter(
     (product) =>
       product.title.toLowerCase().includes(searchQuery) ||
-      product.category.toLowerCase().includes(searchQuery)
+      product.category?.toLowerCase().includes(searchQuery)
   );
 }
-  
 
   // Search returned no results — show NotFound with same look and code
   if (searchQuery && filteredProducts.length === 0) {
@@ -59,11 +61,21 @@ if (searchQuery) {
     );
   }
 
+ 
+  let sortedProducts = [...filteredProducts];
+  if (sort === "price_asc") {
+    sortedProducts.sort((a, b) => a.price - b.price);
+  } else if (sort === "price_desc") {
+    sortedProducts.sort((a, b) => b.price - a.price);
+  } else if (sort === "title") {
+    sortedProducts.sort((a, b) => a.title.localeCompare(b.title));
+  }
+
   return (
     <div>
-      <h1 className="text-4xl font-bold mt-4 mb-7 text-orange-300 dark:text-white">Our Products 🛍️</h1>
-      <div className="grid grid-cols-1 sm:grid-cols-5 gap-6 text-gray-700 dark:text-gray-300">
-        {filteredProducts.map((product) => (
+      
+      <div className="grid grid-cols-1 sm:grid-cols-5 gap-6 text-gray-700 dark:text-gray-300 mt-10">
+        {sortedProducts.map((product) => (
           <ProductCard
             key={product.id}
             product={product}
