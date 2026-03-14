@@ -1,5 +1,10 @@
 # Hinda's E-shop 🛍️
 
+☯️ Live Demo
+
+-  https://ecommerce-w-application.netlify.app/
+
+
 ✨ Features
 - Product listing from an external API
 - Product details page with dynamic routing
