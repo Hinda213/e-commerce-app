@@ -58,6 +58,34 @@ This project was built to practice:
 - Implementing dynamic routing
 - Creating a clean and scalable project structure
 
+## ⚙️ Installation
+
+Clone the repository:
+
+git clone https://github.com/yourusername/hinda-eshop.git
+
+Navigate into the project folder:
+
+cd hinda-eshop
+
+Install dependencies:
+
+npm install
+
+Start the development server:
+
+npm run dev
+
+## 🔮 Future Improvements
+
+* User authentication with a real backend
+* Product reviews and ratings
+* Checkout and payment integration
+* Product pagination or infinite scrolling
+* Wishlist feature
+
+
+
 
 
 Build with 💘💖 using React
